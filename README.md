@@ -11,7 +11,7 @@ Average CPU execution time: 0.801461 seconds -- Run 2
 
 Combined Average CPU execution time: 0.79263 seconds
 #### In Kotlin -- 2.3Ghz i9 Macbook Pro
-TODO
+Average Kotlin execution time: 0.01 seconds
 #### In C -- 2.3Ghz i9 Macbook Pro
 TODO
 ### GPU with [PyCUDA](https://github.com/inducer/pycuda) -- Google Colab T4 Runtime
