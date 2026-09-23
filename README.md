@@ -1,6 +1,6 @@
 # subset-sum-gpu - filling many backpacks faster via the hardware designed for parallel computing
 
-## Motivation
+## Motivation (Draft)
 - It's pretty obvious that using hardware designed to run a bunch of the same calculations concurrently will... run a bunch of the same calculations concurrently, faster than more general-purpose computing hardware, but...
   - This example is simple enough to make "moving the problem to GPU" less intimidating
   - But... this is a real example! I have seen a commercial use case of solving a large number of subset sum problems.
