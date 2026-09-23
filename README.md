@@ -40,5 +40,5 @@ uv run jupyter lab macbook.ipynb
 |----------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------|----------|
 | [M4 Macbook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | 0.460 s  |
 | [M4 Macbook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Metal                                                                 | 0.0036 s |
-| Colab T4                                                                                                                         | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | ???      |
-| Colab T4                                                                                                                         | PyCUDA                                                                | ???      |
+| Colab T4                                                                                                                         | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | 2.805 s  |
+| Colab T4                                                                                                                         | PyCUDA                                                                | 0.0030 s |
