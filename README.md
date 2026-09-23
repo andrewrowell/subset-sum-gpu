@@ -1,32 +1,22 @@
-# knapsack-gpu - Running the Knapsack Problem in Different Places
-## Results
-### CPU with [Google OR-Tools](https://github.com/google/or-tools)
-#### In Python -- Google Colab T4 Runtime
-Average CPU execution time: 1.374059 seconds
-#### In Python -- 2.3Ghz i9 Macbook Pro
-```Andrews-Personal-MacBook.local```
+# knapsack-gpu - filling many backpacks faster via the hardware designed for parallel computing
 
-Average CPU execution time: 0.783799 seconds -- Run 1
-Average CPU execution time: 0.801461 seconds -- Run 2
+## Motivation
+- It's pretty obvious that using hardware designed to run a bunch of the same calculations concurrently will... run a bunch of the same calculations concurrently, faster than more general-purpose computing hardware, but...
+  - This example is simple enough to make "moving the problem to GPU" less intimidating
+  - But... this is a real example! I have seen a commercial use case of solving a large number of knapsack problems.
+- There has been a massive deployment of GPU hardware (source?)
+- While a lot of the excitement about this hardware is related to LLMs, there are all sorts of problems that can be solved faster by throwing a bunch of parallel computing power at them.
+- If the LLM/AI bubble bursts, there could be a bunch of cheap GPU hardware ready to use in the cloud
 
-Combined Average CPU execution time: 0.79263 seconds
-#### In Kotlin -- 2.3Ghz i9 Macbook Pro
-Average Kotlin execution time: 0.01 seconds
-#### In C -- 2.3Ghz i9 Macbook Pro
-TODO
-### GPU with [PyCUDA](https://github.com/inducer/pycuda) -- Google Colab T4 Runtime
-Average PyCUDA execution time: 0.007630 seconds
-### GPU with [PyOpenCL](https://pypi.org/project/pyopencl/) -- Google Colab T4 Runtime
-```[<pyopencl.Platform 'NVIDIA CUDA' at 0x5bf263cd45a0>]```
-
-Average CPU execution time: 0.000615 seconds
-### GPU with [PyOpenCL](https://pypi.org/project/pyopencl/) -- 2.3Ghz i9 Macbook Pro
-```[<pyopencl.Platform 'Apple' at 0x7fff0000>]```
-
-Average CPU execution time: 0.001286 seconds
-### GPU with CUDA in C
-TODO
-### GPU with OpenCL in C
-TODO
 ## The Problems
-TODO: Store the problems, or a way to generate the problems and store them to be used by multiple approaches.
+TODO: Store the problems in files, give a brief summary of them here
+
+## Testing Method
+
+## Results
+| Device                                                                                                                           | Implementation                                                        | Run Time |
+|----------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------|----------|
+| [M4 Macbook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | ???      |
+| [M4 Macbook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Metal                                                                 | ???      |
+| Colab T4                                                                                                                         | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | ???      |
+| Colab T4                                                                                                                         | PyCUDA                                                                | ???      |
