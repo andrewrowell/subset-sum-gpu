@@ -11,6 +11,16 @@
 ## The Problems
 TODO: Store the problems in files, give a brief summary of them here
 
+## Running It
+The local environment is managed by [uv](https://docs.astral.sh/uv/)
+
+```bash
+uv sync
+uv run jupyter lab macbook.ipynb
+```
+
+`colab.ipynb` is opened in Colab rather than locally. It clones this repo to get `problems.py` and installs its own dependencies there.
+
 ## Testing Method
 
 ## Results
