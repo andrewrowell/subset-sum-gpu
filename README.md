@@ -1,9 +1,9 @@
-# knapsack-gpu - filling many backpacks faster via the hardware designed for parallel computing
+# subset-sum-gpu - filling many backpacks faster via the hardware designed for parallel computing
 
 ## Motivation
 - It's pretty obvious that using hardware designed to run a bunch of the same calculations concurrently will... run a bunch of the same calculations concurrently, faster than more general-purpose computing hardware, but...
   - This example is simple enough to make "moving the problem to GPU" less intimidating
-  - But... this is a real example! I have seen a commercial use case of solving a large number of knapsack problems.
+  - But... this is a real example! I have seen a commercial use case of solving a large number of subset sum problems.
 - There has been a massive deployment of GPU hardware (source?)
 - While a lot of the excitement about this hardware is related to LLMs, there are all sorts of problems that can be solved faster by throwing a bunch of parallel computing power at them.
 - If the LLM/AI bubble bursts, there could be a bunch of cheap GPU hardware ready to use in the cloud
