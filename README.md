@@ -46,9 +46,8 @@ On each platform, MacBook and Google Colab, the problems are solved in three dif
 First, they are solved with OR-Tools, using its dynamic programming knapsack solver to get a baseline of how long
 it takes to solve the problems just with CPU using a popular library for the task.
 
-Second, they are solved with a bitwise dynamic programming algorithm (see `best_total` in `problems.py`) which yields
-a solution much faster, at the cost of not calculating which combination of items made up the largest possible
-total for the given problem. OR-Tools also supports the more general knapsack problem, including multidimensional
+Second, they are solved with a bitwise dynamic programming algorithm (see `best_subset` in `problems.py`) which
+yields a solution much faster. OR-Tools also supports the more general knapsack problem, including multidimensional
 knapsack, and offers different solvers that may be more optimal for different problem sets.
 
 Finally, the problems are solved with GPU libraries for each platform. On the MacBook, it uses Metal, and on Colab 
@@ -62,20 +61,24 @@ The GPU kernels are both set up for a constant number of items per problem. If I
 number of items per problem, I would probably pad the items input with items with weight = 0, and also pass in an
 item count per problem to keep the GPU kernel from unnecessarily executing for the zero-weighted items.
 
+The CPU comparison uses Python. While there are other faster choices (e.g. a compiled langauge like C) for running the
+same algorithm on CPU, I think the work to write that and call it from Python would be comparable to adding the GPU
+code. I am intentionally comparing the performance of "Written in Python" vs "Written in Python with GPU calls".
+
 This isn't meant to be a comparison of Metal vs CUDA, or Mac vs T4. I was running other things (IDE, Browser, Terminal)
-on my MacBook while running the jupyter notebook, but that workload was constant in the CPU and GPU test, and seeing
-a comparable speedup in the Colab notebook leads me to believe the other applications on my macbook had no material
-impact on the results of the test.
+on my MacBook while running the Jupyter notebook -- specifically the browser may have been using resources that affected
+the performance of the GPU test. Seeing a speedup in the Colab notebook confirms that it was still possible to speed
+up the workload by using the GPU.
 
 ## Results
 | Device                                                                                                                           | Implementation                                                        | Run Time |
 |----------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------|----------|
-| [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | 0.1089 s |
-| [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Python, bitset DP (`best_total`), on CPU                             | 0.0279 s |
-| [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Metal                                                                 | 0.0054 s |
-| Colab T4                                                                                                                         | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | 0.3215 s |
-| Colab T4                                                                                                                         | Python, bitset DP (`best_total`), on CPU                             | 0.0829 s |
-| Colab T4                                                                                                                         | PyCUDA                                                                | 0.0033 s |
+| [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | 0.1388 s |
+| [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Python, bitset DP (`best_subset`), on CPU                           | 0.0513 s |
+| [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Metal                                                                 | 0.0019 s |
+| Colab T4                                                                                                                         | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | ???      |
+| Colab T4                                                                                                                         | Python, bitset DP (`best_subset`), on CPU                           | ???      |
+| Colab T4                                                                                                                         | PyCUDA                                                                | ???      |
 
 Each run time is the average over `NUMBER_OF_TRIALS` = 100 solves of all 10,000 problems. Of the Metal
-figure, 0.0051 s is the kernel itself; the remainder is command buffer setup and dispatch.
+figure, 0.0015 s is the kernel itself; the remainder is command buffer setup and dispatch.

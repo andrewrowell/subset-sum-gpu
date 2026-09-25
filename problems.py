@@ -25,6 +25,30 @@ def best_total(items: np.ndarray, capacity: int) -> int:
 def _hits_capacity(items: np.ndarray, capacity: int) -> bool:
     return best_total(items, capacity) == capacity
 
+
+# best_total throws away which items it used. To recover them, keep the reachable
+# set after each item, then walk backwards: if the total was already reachable
+# without item i, item i was not needed; otherwise it was, so subtract it.
+def best_subset(items: np.ndarray, capacity: int) -> tuple[int, list[int]]:
+    mask = (1 << (capacity + 1)) - 1
+    reachable = 1
+    history = [reachable] # history[i] is what was reachable using only items[:i]
+    for item in items:
+        reachable |= reachable << int(item)
+        reachable &= mask
+        history.append(reachable)
+
+    total = reachable.bit_length() - 1
+    remaining = total
+    chosen = []
+    for i in range(len(items) - 1, -1, -1):
+        if history[i] >> remaining & 1:
+            continue # this total was already reachable without item i
+        chosen.append(i)
+        remaining -= int(items[i])
+    chosen.reverse()
+    return total, chosen
+
 # Some examples:
 # items=[3, 5]  capacity=7
 #         bit index: 7 6 5 4 3 2 1 0
@@ -51,7 +75,7 @@ def _hits_capacity(items: np.ndarray, capacity: int) -> bool:
 
 @dataclass(frozen=True)
 class ProblemSet:
-    # Both are int32 so they can be handed to a GPU buffer without a copy.
+    # Both are int32 so they can be handed to a GPU buffer without a type change.
     items: np.ndarray  # shape (num_problems, num_items)
     capacities: np.ndarray  # shape (num_problems,)
 
@@ -107,3 +131,33 @@ def generate(
     )
     capacities = rng.integers(1, max_capacity + 1, size=num_problems, dtype=np.int32)
     return ProblemSet(items=items, capacities=capacities)
+
+
+def check_solutions(
+    problem_set: ProblemSet, totals: np.ndarray, chosen: np.ndarray
+) -> int:
+    """Count the problems whose reported solution is wrong, and say how.
+
+    `chosen` is a (num_problems, num_items) array of flags. A solution is only
+    accepted if the flagged items really add up to the reported total, that total
+    fits in the capacity, and no larger total was possible.
+    """
+    items, capacities = problem_set.items, problem_set.capacities
+    chosen = np.asarray(chosen, dtype=bool)
+    totals = np.asarray(totals)
+
+    sums = (items * chosen).sum(axis=1)
+    wrong_sum = np.flatnonzero(sums != totals)
+    over_capacity = np.flatnonzero(totals > capacities)
+    not_optimal = np.flatnonzero(
+        [totals[i] != best_total(items[i], int(capacities[i]))
+         for i in range(problem_set.num_problems)]
+    )
+
+    for label, bad in (("chosen items do not sum to the reported total", wrong_sum),
+                       ("total exceeds the capacity", over_capacity),
+                       ("a larger total was possible", not_optimal)):
+        if len(bad):
+            print(f"  {len(bad)} problems where {label} (first: {bad[:5].tolist()})")
+
+    return len(set(wrong_sum) | set(over_capacity) | set(not_optimal))
