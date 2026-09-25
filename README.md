@@ -41,11 +41,41 @@ light one otherwise. Drop the flag to always get the light theme.
 `colab.ipynb` is opened in Colab rather than locally. It clones this repo to get `problems.py` and installs its own dependencies there.
 
 ## Testing Method
+On each platform, MacBook and Google Colab, the problems are solved in three different ways.
+
+First, they are solved with OR-Tools, using its dynamic programming knapsack solver to get a baseline of how long
+it takes to solve the problems just with CPU using a popular library for the task.
+
+Second, they are solved with a bitwise dynamic programming algorithm (see `best_total` in `problems.py`) which yields
+a solution much faster, at the cost of not calculating which combination of items made up the largest possible
+total for the given problem. OR-Tools also supports the more general knapsack problem, including multidimensional
+knapsack, and offers different solvers that may be more optimal for different problem sets.
+
+Finally, the problems are solved with GPU libraries for each platform. On the MacBook, it uses Metal, and on Colab 
+it uses CUDA on an NVIDIA T4 GPU. This test uses the same algorithm as the bitwise dynamic programming step, so I
+think the second test and this test are the most direct comparison of how the GPU ran these calculations faster.
+
+I ran the `macbook.ipynb` notebook on my M4 MacBook Air, and `colab.ipynb` in Google Colab on a T4 instance.
+
+## Known Limitations
+The GPU kernels are both set up for a constant number of items per problem. If I wanted it to handle a variable
+number of items per problem, I would probably pad the items input with items with weight = 0, and also pass in an
+item count per problem to keep the GPU kernel from unnecessarily executing for the zero-weighted items.
+
+This isn't meant to be a comparison of Metal vs CUDA, or Mac vs T4. I was running other things (IDE, Browser, Terminal)
+on my MacBook while running the jupyter notebook, but that workload was constant in the CPU and GPU test, and seeing
+a comparable speedup in the Colab notebook leads me to believe the other applications on my macbook had no material
+impact on the results of the test.
 
 ## Results
 | Device                                                                                                                           | Implementation                                                        | Run Time |
 |----------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------|----------|
-| [M4 Macbook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | 0.460 s  |
-| [M4 Macbook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Metal                                                                 | 0.0036 s |
-| Colab T4                                                                                                                         | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | 2.805 s  |
-| Colab T4                                                                                                                         | PyCUDA                                                                | 0.0030 s |
+| [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | 0.1089 s |
+| [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Python, bitset DP (`best_total`), on CPU                             | 0.0279 s |
+| [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Metal                                                                 | 0.0054 s |
+| Colab T4                                                                                                                         | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | 0.3215 s |
+| Colab T4                                                                                                                         | Python, bitset DP (`best_total`), on CPU                             | 0.0829 s |
+| Colab T4                                                                                                                         | PyCUDA                                                                | 0.0033 s |
+
+Each run time is the average over `NUMBER_OF_TRIALS` = 100 solves of all 10,000 problems. Of the Metal
+figure, 0.0051 s is the kernel itself; the remainder is command buffer setup and dispatch.
