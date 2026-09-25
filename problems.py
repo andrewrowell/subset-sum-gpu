@@ -12,14 +12,18 @@ DEFAULT_MAX_ITEM = 999
 
 # This is some pretty dense code, but it's just using an array of bits to
 # track what total amounts are reachable by taking or not taking each item
-def _hits_capacity(items: np.ndarray, capacity: int) -> bool:
+def best_total(items: np.ndarray, capacity: int) -> int:
     reachable = 1 # First bit of reachable is the index for 0
     mask = (1 << (capacity + 1)) - 1 # Set a mask of all totals bits from 0 to capacity (for dropping overshoots)
     for item in items:
         # Set reachable total bits for all totals reachable via the current item
         reachable |= reachable << int(item)
         reachable &= mask # Drop any totals that have overshot the capacity
-    return bool(reachable >> capacity & 1) # True if the bit for the capacity was a reachable total
+    return reachable.bit_length() - 1 # The highest bit still set is the largest reachable total
+
+
+def _hits_capacity(items: np.ndarray, capacity: int) -> bool:
+    return best_total(items, capacity) == capacity
 
 # Some examples:
 # items=[3, 5]  capacity=7
