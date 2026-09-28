@@ -76,9 +76,9 @@ up the workload by using the GPU.
 | [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | 0.1388 s |
 | [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Python, bitset DP (`best_subset`), on CPU                           | 0.0513 s |
 | [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Metal                                                                 | 0.0019 s |
-| Colab T4                                                                                                                         | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | ???      |
-| Colab T4                                                                                                                         | Python, bitset DP (`best_subset`), on CPU                           | ???      |
-| Colab T4                                                                                                                         | PyCUDA                                                                | ???      |
+| Colab T4                                                                                                                         | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | 0.4376 s |
+| Colab T4                                                                                                                         | Python, bitset DP (`best_subset`), on CPU                           | 0.1640 s |
+| Colab T4                                                                                                                         | PyCUDA                                                                | 0.0004 s |
 
 Each run time is the average over `NUMBER_OF_TRIALS` = 100 solves of all 10,000 problems. Of the Metal
 figure, 0.0015 s is the kernel itself; the remainder is command buffer setup and dispatch.
