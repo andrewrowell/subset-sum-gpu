@@ -1,14 +1,16 @@
-# subset-sum-gpu - filling many backpacks faster via the hardware designed for parallel computing
+# subset-sum-gpu
+A concrete example of using GPU to speed up a large number of similar calculations, by 53x on a MacBook via Metal, and
+???x on a server with an NVIDIA GPU via CUDA.
 
 ## Motivation
-GPUs have been popular for rendering graphics, mining cryptocurrency, and lately for running LLMs. I have seen this type
-of hardware become more available, both in cloud environments and on local hardware. I think it would be useful to get
-a sense of what kind of problems are appropriate for solving on GPU, and to see how easy it might be to modify some
-code to move its calculations to GPU.
+GPUs have been popular for rendering graphics, mining cryptocurrency, and lately, running LLMs. I have seen this type
+of hardware become more available and affordable, both in cloud environments and on local machines. I think it would be
+useful to get a sense of what kind of problems are appropriate for solving on GPU, and to see how easy it might be to 
+modify some code to move its calculations to GPU.
 
 I chose to try this out with a large number of subset sum problems being solved in parallel because it is simple enough
-that moving the calculations to GPU is not too intimidating, but it is complex enough that there are real commercial
-uses for solving it. 
+that moving the calculations to GPU is not too intimidating, but it is complex enough to be practically useful -- I have
+seen an actual business problem that involved solving a large number of subset sums!
 
 
 ## The Problems
@@ -79,12 +81,12 @@ scale there's a good chance the CPU would be faster.
 ## Results
 | Device                                                                                                                           | Implementation                                                        | Run Time |
 |----------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------|----------|
-| [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | 0.1388 s |
-| [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Python, bitset DP (`best_subset`), on CPU                           | 0.0513 s |
-| [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Metal                                                                 | 0.0019 s |
-| Colab T4                                                                                                                         | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | 0.4376 s |
-| Colab T4                                                                                                                         | Python, bitset DP (`best_subset`), on CPU                           | 0.1640 s |
-| Colab T4                                                                                                                         | PyCUDA                                                                | 0.0004 s |
+| [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | 0.1391 s |
+| [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Python, bitset DP (`best_subset`), on CPU                           | 0.0505 s |
+| [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Metal                                                                 | 0.0009 s |
+| Colab T4                                                                                                                         | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | ???      |
+| Colab T4                                                                                                                         | Python, bitset DP (`best_subset`), on CPU                           | ???      |
+| Colab T4                                                                                                                         | PyCUDA                                                                | ???      |
 
 Each run time is the average over `NUMBER_OF_TRIALS` = 100 solves of all 10,000 problems. Of the Metal
-figure, 0.0015 s is the kernel itself; the remainder is command buffer setup and dispatch.
+figure, 0.0005 s is the kernel itself; the remainder is command buffer setup and dispatch.
