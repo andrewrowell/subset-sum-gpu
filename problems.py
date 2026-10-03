@@ -89,7 +89,7 @@ class ProblemSet:
 
     @property
     def max_capacity(self) -> int:
-        """Widest capacity in the set, needed for a DP table to know its max capacity."""
+        """Widest capacity in the set, needed for sizing the DP table."""
         return int(self.capacities.max())
 
     def analyze(self) -> float:
