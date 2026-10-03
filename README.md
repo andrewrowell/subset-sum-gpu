@@ -1,6 +1,6 @@
 # subset-sum-gpu
 A concrete example of using GPU to speed up a large number of similar calculations, by 53x on a MacBook via Metal, and
-???x on a server with an NVIDIA GPU via CUDA.
+269x on a server with an NVIDIA GPU via CUDA.
 
 ## Motivation
 GPUs have been popular for rendering graphics, mining cryptocurrency, and lately, running LLMs. I have seen this type
@@ -84,9 +84,9 @@ scale there's a good chance the CPU would be faster.
 | [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | 0.1391 s |
 | [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Python, bitset DP (`best_subset`), on CPU                           | 0.0505 s |
 | [M4 MacBook Air](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m4-10-core-cpu-10-core-gpu-13-2025-specs.html) | Metal                                                                 | 0.0009 s |
-| Colab T4                                                                                                                         | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | ???      |
-| Colab T4                                                                                                                         | Python, bitset DP (`best_subset`), on CPU                           | ???      |
-| Colab T4                                                                                                                         | PyCUDA                                                                | ???      |
+| Colab T4                                                                                                                         | Python, [Google OR-Tools](https://github.com/google/or-tools), on CPU | 0.4178 s |
+| Colab T4                                                                                                                         | Python, bitset DP (`best_subset`), on CPU                           | 0.1705 s |
+| Colab T4                                                                                                                         | PyCUDA                                                                | 0.0006 s |
 
 Each run time is the average over `NUMBER_OF_TRIALS` = 100 solves of all 10,000 problems. Of the Metal
 figure, 0.0005 s is the kernel itself; the remainder is command buffer setup and dispatch.
