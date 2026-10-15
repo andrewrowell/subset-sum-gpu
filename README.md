@@ -66,7 +66,7 @@ The GPU kernels are both set up for a constant number of items per problem. If I
 number of items per problem, I would probably pad the items input with items with weight = 0, and also pass in an
 item count per problem to keep the GPU kernel from unnecessarily executing for the zero-weighted items.
 
-The CPU comparison uses Python. While there are other faster choices (e.g. a compiled langauge like C) for running the
+The CPU comparison uses Python. While there are other faster choices (e.g. a compiled language like C) for running the
 same algorithm on CPU, I think the work to write that and call it from Python would be comparable to adding the GPU
 code. I am intentionally comparing the performance of "Written in Python" vs "Written in Python with GPU calls".
 
