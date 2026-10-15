@@ -73,6 +73,17 @@ def best_subset(items: np.ndarray, capacity: int) -> tuple[int, list[int]]:
 #    bit 9 set? True
 
 
+# This just makes the multiprocess version of the bitset DP code a little cleaner
+def best_subsets(items: np.ndarray, capacities: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    totals = np.zeros(len(capacities), dtype=np.int32)
+    chosen = np.zeros(items.shape, dtype=np.uint8)  # flags, one row per problem
+    for i in range(len(capacities)):
+        total, picked = best_subset(items[i], int(capacities[i]))
+        totals[i] = total
+        chosen[i, picked] = 1
+    return totals, chosen
+
+
 @dataclass(frozen=True)
 class ProblemSet:
     # Both are int32 so they can be handed to a GPU buffer without a type change.
